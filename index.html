@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stick Figure Studio</title>
+
+<style>
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:#0b0d12;
+    color:white;
+    font-family:Arial,sans-serif;
+    overflow:hidden;
+}
+
+header{
+    height:64px;
+    background:#12151d;
+    border-bottom:1px solid #252a35;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 20px;
+}
+
+.logo{
+    font-size:20px;
+    font-weight:bold;
+}
+
+.logo span{
+    color:#7c5cff;
+}
+
+.status{
+    font-size:13px;
+    color:#8f98aa;
+}
+
+.main{
+    height:calc(100vh - 64px);
+    display:flex;
+}
+
+.stage-area{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.stage{
+    position:relative;
+    width:min(900px,100%);
+    height:min(600px,80vh);
+    background:white;
+    border-radius:18px;
+    overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+canvas{
+    width:100%;
+    height:100%;
+    display:block;
+}
+
+.panel{
+    width:300px;
+    background:#11141c;
+    border-right:1px solid #252a35;
+    padding:20px;
+    overflow-y:auto;
+}
+
+.panel h2{
+    margin:0 0 20px;
+    font-size:18px;
+}
+
+.section{
+    margin-bottom:22px;
+}
+
+.section-title{
+    color:#8f98aa;
+    font-size:12px;
+    margin-bottom:10px;
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+
+button{
+    border:0;
+    border-radius:10px;
+    padding:12px;
+    background:#1c212c;
+    color:white;
+    cursor:pointer;
+    font-size:14px;
+}
+
+button:hover{
+    background:#292f3d;
+}
+
+button.active{
+    background:#7c5cff;
+}
+
+.primary{
+    width:100%;
+    background:#7c5cff;
+    font-weight:bold;
+    margin-top:10px;
+}
+
+.primary:hover{
+    background:#6b4de8;
+}
+
+.slider{
+    width:100%;
+}
+
+.value{
+    color:#7c5cff;
+    float:left;
+}
+
+@media(max-width:800px){
+    .main{
+        flex-direction:column;
+        overflow:auto;
+    }
+
+    .stage-area{
+        min-height:55vh;
+        padding:10px;
+    }
+
+    .stage{
+        height:50vh;
+    }
+
+    .panel{
+        width:100%;
+        border-right:0;
+        border-top:1px solid #252a35;
+    }
+
+    body{
+        overflow:auto;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">🎬 <span>Stick Figure</span> Studio</div>
+    <div class="status" id="status">● جاهز</div>
+</header>
+
+<div class="main">
+
+    <div class="stage-area">
+        <div class="stage">
+            <canvas id="canvas"></canvas>
+        </div>
+    </div>
+
+    <aside class="panel">
+
+        <h2>🎭 الاستوديو</h2>
+
+        <div class="section">
+            <div class="section-title">الحركة</div>
+
+            <div class="buttons">
+                <button onclick="setAnimation('idle')" id="idle">
+                    🧍 وقوف
+                </button>
+
+                <button onclick="setAnimation('walk')" id="walk">
+                    🚶 مشي
+                </button>
+
+                <button onclick="setAnimation('jump')" id="jump">
+                    🦘 قفز
+                </button>
+
+                <button onclick="setAnimation('wave')" id="wave">
+                    👋 تلويح
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">
+                سرعة الحركة
+                <span class="value" id="speedValue">1.0</span>
+            </div>
+
+            <input
+                class="slider"
+                id="speed"
+                type="range"
+                min="0.2"
+                max="3"
+                step="0.1"
+                value="1"
+            >
+        </div>
+
+        <div class="section">
+            <div class="section-title">الشخصية</div>
+
+            <div class="buttons">
+                <button onclick="changeCharacter(-1)">
+                    ◀ السابقة
+                </button>
+
+                <button onclick="changeCharacter(1)">
+                    التالية ▶
+                </button>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">المشهد</div>
+
+            <div class="buttons">
+                <button onclick="changeBackground('#ffffff')">
+                    أبيض
+                </button>
+
+                <button onclick="changeBackground('#e8f0ff')">
+                    أزرق
+                </button>
+
+                <button onclick="changeBackground('#fff0df')">
+                    دافئ
+                </button>
+
+                <button onclick="changeBackground('#111827')">
+                    ليلي
+                </button>
+            </div>
+        </div>
+
+        <button class="primary" onclick="toggleAnimation()">
+            ▶ تشغيل / إيقاف
+        </button>
+
+    </aside>
+
+</div>
+
+<script>
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let animation = "idle";
+let playing = true;
+let speed = 1;
+let time = 0;
+let character = 0;
+let background = "#ffffff";
+
+const colors = [
+    "#111111",
+    "#5b21b6",
+    "#dc2626",
+    "#0369a1"
+];
+
+function resize(){
+
+    const rect = canvas.getBoundingClientRect();
+
+    canvas.width = rect.width * devicePixelRatio;
+    canvas.height = rect.height * devicePixelRatio;
+
+    ctx.setTransform(
+        devicePixelRatio,
+        0,
+        0,
+        devicePixelRatio,
+        0,
+        0
+    );
+}
+
+window.addEventListener("resize", resize);
+resize();
+
+function line(x1,y1,x2,y2){
+
+    ctx.beginPath();
+    ctx.moveTo(x1,y1);
+    ctx.lineTo(x2,y2);
+    ctx.stroke();
+}
+
+function circle(x,y,r){
+
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.stroke();
+}
+
+function drawStickFigure(x,y){
+
+    const color = colors[character];
+
+    const walk =
+        animation === "walk"
+        ? Math.sin(time * 0.15) * 28
+        : 0;
+
+    const arm =
+        animation === "wave"
+        ? Math.sin(time * 0.15) * 35
+        : 0;
+
+    let jump = 0;
+
+    if(animation === "jump"){
+        jump = Math.abs(Math.sin(time * 0.08)) * 90;
+    }
+
+    y -= jump;
+
+    ctx.strokeStyle = color;
+    ctx.fillStyle = color;
+
+    ctx.lineWidth = 7;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    // الرأس
+    circle(x,y-120,32);
+
+    // الجسم
+    line(x,y-88,x,y);
+
+    // الذراع اليمنى
+    if(animation === "wave"){
+
+        line(
+            x,
+            y-65,
+            x+45,
+            y-110-arm
+        );
+
+        // اليد
+        circle(
+            x+45,
+            y-110-arm,
+            7
+        );
+
+    }else{
+
+        line(
+            x,
+            y-65,
+            x-45,
+            y-25-arm
+        );
+
+        line(
+            x,
+            y-65,
+            x+45,
+            y-25+arm
+        );
+    }
+
+    // الرجلين
+    line(
+        x,
+        y,
+        x-35+walk,
+        y+75
+    );
+
+    line(
+        x,
+        y,
+        x+35-walk,
+        y+75
+    );
+
+    // العين
+    ctx.fillStyle = color;
+
+    ctx.beginPath();
+    ctx.arc(x-11,y-126,4,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.arc(x+11,y-126,4,0,Math.PI*2);
+    ctx.fill();
+
+    // ابتسامة
+    ctx.beginPath();
+    ctx.arc(x,y-116,12,0,Math.PI);
+    ctx.stroke();
+
+}
+
+function draw(){
+
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+
+    ctx.clearRect(0,0,width,height);
+
+    ctx.fillStyle = background;
+    ctx.fillRect(0,0,width,height);
+
+    // الأرض
+    ctx.strokeStyle =
+        background === "#111827"
+        ? "#374151"
+        : "#dddddd";
+
+    ctx.lineWidth = 3;
+
+    line(
+        0,
+        height-100,
+        width,
+        height-100
+    );
+
+    // الشخصية
+    drawStickFigure(
+        width/2,
+        height-180
+    );
+
+    // عنوان صغير
+    ctx.font = "18px Arial";
+
+    ctx.fillStyle =
+        background === "#111827"
+        ? "#ffffff"
+        : "#222222";
+
+    ctx.textAlign = "center";
+
+    ctx.fillText(
+        "Stick Figure Studio",
+        width/2,
+        35
+    );
+}
+
+function animate(){
+
+    if(playing){
+        time += speed;
+    }
+
+    draw();
+
+    requestAnimationFrame(animate);
+}
+
+function setAnimation(type){
+
+    animation = type;
+
+    document
+        .querySelectorAll(".buttons button")
+        .forEach(btn => btn.classList.remove("active"));
+
+    const button = document.getElementById(type);
+
+    if(button){
+        button.classList.add("active");
+    }
+
+    document.getElementById("status").textContent =
+        "● الحركة: " + type;
+}
+
+function toggleAnimation(){
+
+    playing = !playing;
+
+    document.getElementById("status").textContent =
+        playing ? "● يعمل الآن" : "Ⅱ متوقف";
+}
+
+function changeCharacter(direction){
+
+    character += direction;
+
+    if(character < 0)
+        character = colors.length-1;
+
+    if(character >= colors.length)
+        character = 0;
+}
+
+function changeBackground(color){
+
+    background = color;
+}
+
+document.getElementById("speed").addEventListener(
+    "input",
+    function(){
+
+        speed = Number(this.value);
+
+        document.getElementById("speedValue").textContent =
+            speed.toFixed(1);
+    }
+);
+
+setAnimation("idle");
+
+animate();
+
+</script>
+
+</body>
+</html>
