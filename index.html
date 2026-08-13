@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Stick Figure Studio</title>
 
 <style>
@@ -12,17 +12,15 @@
 
 body{
     margin:0;
-    min-height:100vh;
     background:#0b0d12;
     color:white;
     font-family:Arial,sans-serif;
-    overflow:hidden;
 }
 
 header{
-    height:64px;
-    background:#12151d;
-    border-bottom:1px solid #252a35;
+    height:65px;
+    background:#11151d;
+    border-bottom:1px solid #292e39;
     display:flex;
     align-items:center;
     justify-content:space-between;
@@ -35,35 +33,29 @@ header{
 }
 
 .logo span{
-    color:#7c5cff;
+    color:#8b5cf6;
 }
 
-.status{
-    font-size:13px;
-    color:#8f98aa;
-}
-
-.main{
-    height:calc(100vh - 64px);
+.app{
     display:flex;
+    height:calc(100vh - 65px);
 }
 
-.stage-area{
+.workspace{
     flex:1;
+    padding:20px;
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:20px;
 }
 
-.stage{
-    position:relative;
-    width:min(900px,100%);
-    height:min(600px,80vh);
+.canvasBox{
+    width:min(1000px,100%);
+    height:min(700px,85vh);
     background:white;
-    border-radius:18px;
+    border-radius:20px;
     overflow:hidden;
-    box-shadow:0 20px 60px rgba(0,0,0,.35);
+    box-shadow:0 20px 70px rgba(0,0,0,.4);
 }
 
 canvas{
@@ -72,30 +64,25 @@ canvas{
     display:block;
 }
 
-.panel{
-    width:300px;
-    background:#11141c;
-    border-right:1px solid #252a35;
+.sidebar{
+    width:310px;
+    background:#11151d;
+    border-left:1px solid #292e39;
     padding:20px;
-    overflow-y:auto;
+    overflow:auto;
 }
 
-.panel h2{
+h2{
     margin:0 0 20px;
-    font-size:18px;
 }
 
-.section{
-    margin-bottom:22px;
-}
-
-.section-title{
-    color:#8f98aa;
+.title{
+    color:#9ca3af;
     font-size:12px;
-    margin-bottom:10px;
+    margin:20px 0 10px;
 }
 
-.buttons{
+.grid{
     display:grid;
     grid-template-columns:1fr 1fr;
     gap:8px;
@@ -103,65 +90,53 @@ canvas{
 
 button{
     border:0;
-    border-radius:10px;
-    padding:12px;
-    background:#1c212c;
+    background:#1c222d;
     color:white;
+    padding:12px;
+    border-radius:10px;
     cursor:pointer;
     font-size:14px;
 }
 
 button:hover{
-    background:#292f3d;
+    background:#2a3140;
 }
 
 button.active{
-    background:#7c5cff;
+    background:#8b5cf6;
 }
 
-.primary{
+.mainBtn{
     width:100%;
-    background:#7c5cff;
+    margin-top:15px;
+    background:#8b5cf6;
     font-weight:bold;
-    margin-top:10px;
 }
 
-.primary:hover{
-    background:#6b4de8;
-}
-
-.slider{
+input[type=range]{
     width:100%;
-}
-
-.value{
-    color:#7c5cff;
-    float:left;
 }
 
 @media(max-width:800px){
-    .main{
+
+    .app{
         flex-direction:column;
-        overflow:auto;
+        height:auto;
     }
 
-    .stage-area{
+    .workspace{
         min-height:55vh;
         padding:10px;
     }
 
-    .stage{
+    .canvasBox{
         height:50vh;
     }
 
-    .panel{
+    .sidebar{
         width:100%;
-        border-right:0;
-        border-top:1px solid #252a35;
-    }
-
-    body{
-        overflow:auto;
+        border-left:0;
+        border-top:1px solid #292e39;
     }
 }
 </style>
@@ -171,97 +146,85 @@ button.active{
 
 <header>
     <div class="logo">🎬 <span>Stick Figure</span> Studio</div>
-    <div class="status" id="status">● جاهز</div>
+    <div id="status">● جاهز</div>
 </header>
 
-<div class="main">
+<div class="app">
 
-    <div class="stage-area">
-        <div class="stage">
+    <main class="workspace">
+
+        <div class="canvasBox">
             <canvas id="canvas"></canvas>
         </div>
-    </div>
 
-    <aside class="panel">
+    </main>
 
-        <h2>🎭 الاستوديو</h2>
+    <aside class="sidebar">
 
-        <div class="section">
-            <div class="section-title">الحركة</div>
+        <h2>🎭 الشخصية</h2>
 
-            <div class="buttons">
-                <button onclick="setAnimation('idle')" id="idle">
-                    🧍 وقوف
-                </button>
+        <div class="title">التعبير</div>
 
-                <button onclick="setAnimation('walk')" id="walk">
-                    🚶 مشي
-                </button>
-
-                <button onclick="setAnimation('jump')" id="jump">
-                    🦘 قفز
-                </button>
-
-                <button onclick="setAnimation('wave')" id="wave">
-                    👋 تلويح
-                </button>
-            </div>
+        <div class="grid">
+            <button onclick="setFace('happy')">😊 سعيد</button>
+            <button onclick="setFace('laugh')">😂 يضحك</button>
+            <button onclick="setFace('angry')">😡 غاضب</button>
+            <button onclick="setFace('sad')">😭 حزين</button>
+            <button onclick="setFace('surprised')">😮 مندهش</button>
+            <button onclick="setFace('smirk')">😏 ماكر</button>
         </div>
 
-        <div class="section">
-            <div class="section-title">
-                سرعة الحركة
-                <span class="value" id="speedValue">1.0</span>
-            </div>
+        <div class="title">الحركة</div>
 
-            <input
-                class="slider"
-                id="speed"
-                type="range"
-                min="0.2"
-                max="3"
-                step="0.1"
-                value="1"
-            >
+        <div class="grid">
+
+            <button onclick="setAnimation('idle')">
+                🧍 وقوف
+            </button>
+
+            <button onclick="setAnimation('walk')">
+                🚶 مشي
+            </button>
+
+            <button onclick="setAnimation('run')">
+                🏃 ركض
+            </button>
+
+            <button onclick="setAnimation('jump')">
+                🦘 قفز
+            </button>
+
+            <button onclick="setAnimation('fall')">
+                🤸 سقوط
+            </button>
+
+            <button onclick="setAnimation('punch')">
+                👊 لكم
+            </button>
+
+            <button onclick="setAnimation('wave')">
+                👋 تلويح
+            </button>
+
         </div>
 
-        <div class="section">
-            <div class="section-title">الشخصية</div>
-
-            <div class="buttons">
-                <button onclick="changeCharacter(-1)">
-                    ◀ السابقة
-                </button>
-
-                <button onclick="changeCharacter(1)">
-                    التالية ▶
-                </button>
-            </div>
+        <div class="title">
+            سرعة الحركة
         </div>
 
-        <div class="section">
-            <div class="section-title">المشهد</div>
+        <input
+            id="speed"
+            type="range"
+            min=".2"
+            max="3"
+            step=".1"
+            value="1"
+        >
 
-            <div class="buttons">
-                <button onclick="changeBackground('#ffffff')">
-                    أبيض
-                </button>
-
-                <button onclick="changeBackground('#e8f0ff')">
-                    أزرق
-                </button>
-
-                <button onclick="changeBackground('#fff0df')">
-                    دافئ
-                </button>
-
-                <button onclick="changeBackground('#111827')">
-                    ليلي
-                </button>
-            </div>
-        </div>
-
-        <button class="primary" onclick="toggleAnimation()">
+        <button
+            class="mainBtn"
+            onclick="togglePlay()"
+        >
             ▶ تشغيل / إيقاف
         </button>
 
@@ -271,29 +234,37 @@ button.active{
 
 <script>
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const canvas =
+    document.getElementById("canvas");
+
+const ctx =
+    canvas.getContext("2d");
+
+let W,H;
+
+let time = 0;
+
+let playing = true;
+
+let speed = 1;
 
 let animation = "idle";
-let playing = true;
-let speed = 1;
-let time = 0;
-let character = 0;
-let background = "#ffffff";
 
-const colors = [
-    "#111111",
-    "#5b21b6",
-    "#dc2626",
-    "#0369a1"
-];
+let face = "happy";
 
 function resize(){
 
-    const rect = canvas.getBoundingClientRect();
+    const r =
+        canvas.getBoundingClientRect();
 
-    canvas.width = rect.width * devicePixelRatio;
-    canvas.height = rect.height * devicePixelRatio;
+    W = r.width;
+    H = r.height;
+
+    canvas.width =
+        W * devicePixelRatio;
+
+    canvas.height =
+        H * devicePixelRatio;
 
     ctx.setTransform(
         devicePixelRatio,
@@ -305,241 +276,726 @@ function resize(){
     );
 }
 
-window.addEventListener("resize", resize);
+window.addEventListener(
+    "resize",
+    resize
+);
+
 resize();
 
-function line(x1,y1,x2,y2){
+
+/* =========================
+   أدوات الرسم
+========================= */
+
+function line(
+    x1,y1,
+    x2,y2
+){
 
     ctx.beginPath();
+
     ctx.moveTo(x1,y1);
+
     ctx.lineTo(x2,y2);
+
     ctx.stroke();
 }
 
-function circle(x,y,r){
+
+function circle(
+    x,y,r
+){
 
     ctx.beginPath();
-    ctx.arc(x,y,r,0,Math.PI*2);
+
+    ctx.arc(
+        x,y,r,
+        0,
+        Math.PI*2
+    );
+
     ctx.stroke();
 }
 
-function drawStickFigure(x,y){
 
-    const color = colors[character];
+function filledCircle(
+    x,y,r
+){
 
-    const walk =
-        animation === "walk"
-        ? Math.sin(time * 0.15) * 28
-        : 0;
+    ctx.beginPath();
 
-    const arm =
-        animation === "wave"
-        ? Math.sin(time * 0.15) * 35
-        : 0;
+    ctx.arc(
+        x,y,r,
+        0,
+        Math.PI*2
+    );
 
-    let jump = 0;
+    ctx.fill();
+}
 
-    if(animation === "jump"){
-        jump = Math.abs(Math.sin(time * 0.08)) * 90;
+
+/* =========================
+   الوجه
+========================= */
+
+function drawFace(
+    x,
+    y,
+    scale
+){
+
+    ctx.strokeStyle="#111";
+
+    ctx.fillStyle="#111";
+
+    ctx.lineWidth=5;
+
+    const eyeY =
+        y - 112*scale;
+
+    const eyeX =
+        12*scale;
+
+
+    /* العيون */
+
+    if(face==="happy"){
+
+        ctx.beginPath();
+        ctx.arc(
+            x-eyeX,
+            eyeY,
+            6*scale,
+            0,
+            Math.PI*2
+        );
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(
+            x+eyeX,
+            eyeY,
+            6*scale,
+            0,
+            Math.PI*2
+        );
+        ctx.fill();
+
     }
 
-    y -= jump;
 
-    ctx.strokeStyle = color;
-    ctx.fillStyle = color;
+    if(face==="laugh"){
 
-    ctx.lineWidth = 7;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+        ctx.beginPath();
 
-    // الرأس
-    circle(x,y-120,32);
+        ctx.arc(
+            x-eyeX,
+            eyeY,
+            8*scale,
+            0,
+            Math.PI
+        );
 
-    // الجسم
-    line(x,y-88,x,y);
+        ctx.stroke();
 
-    // الذراع اليمنى
-    if(animation === "wave"){
+        ctx.beginPath();
+
+        ctx.arc(
+            x+eyeX,
+            eyeY,
+            8*scale,
+            0,
+            Math.PI
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    if(face==="angry"){
+
+        line(
+            x-25*scale,
+            eyeY-12*scale,
+            x-4*scale,
+            eyeY-4*scale
+        );
+
+        line(
+            x+25*scale,
+            eyeY-12*scale,
+            x+4*scale,
+            eyeY-4*scale
+        );
+
+        filledCircle(
+            x-eyeX,
+            eyeY,
+            5*scale
+        );
+
+        filledCircle(
+            x+eyeX,
+            eyeY,
+            5*scale
+        );
+
+    }
+
+
+    if(face==="sad"){
+
+        filledCircle(
+            x-eyeX,
+            eyeY,
+            5*scale
+        );
+
+        filledCircle(
+            x+eyeX,
+            eyeY,
+            5*scale
+        );
+
+        ctx.strokeStyle="#38bdf8";
+
+        line(
+            x-eyeX,
+            eyeY+7*scale,
+            x-eyeX,
+            eyeY+18*scale
+        );
+
+        line(
+            x+eyeX,
+            eyeY+7*scale,
+            x+eyeX,
+            eyeY+18*scale
+        );
+
+        ctx.strokeStyle="#111";
+
+    }
+
+
+    if(face==="surprised"){
+
+        filledCircle(
+            x-eyeX,
+            eyeY,
+            5*scale
+        );
+
+        filledCircle(
+            x+eyeX,
+            eyeY,
+            5*scale
+        );
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            eyeY+25*scale,
+            10*scale,
+            0,
+            Math.PI*2
+        );
+
+        ctx.stroke();
+
+    }
+
+
+    if(face==="smirk"){
+
+        filledCircle(
+            x-eyeX,
+            eyeY,
+            5*scale
+        );
+
+        filledCircle(
+            x+eyeX,
+            eyeY,
+            5*scale
+        );
+
+    }
+
+
+    /* الفم */
+
+    ctx.strokeStyle="#111";
+
+    if(face==="happy"){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y-98*scale,
+            18*scale,
+            0,
+            Math.PI
+        );
+
+        ctx.stroke();
+
+    }
+
+    if(face==="laugh"){
+
+        ctx.fillStyle="#111";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y-95*scale,
+            20*scale,
+            0,
+            Math.PI
+        );
+
+        ctx.fill();
+
+    }
+
+    if(face==="angry"){
+
+        line(
+            x-15*scale,
+            y-90*scale,
+            x+15*scale,
+            y-90*scale
+        );
+
+    }
+
+    if(face==="sad"){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y-82*scale,
+            18*scale,
+            Math.PI,
+            Math.PI*2
+        );
+
+        ctx.stroke();
+
+    }
+
+    if(face==="smirk"){
+
+        line(
+            x-3*scale,
+            y-88*scale,
+            x+18*scale,
+            y-92*scale
+        );
+
+    }
+}
+
+
+/* =========================
+   الشخصية
+========================= */
+
+function drawCharacter(){
+
+    const scale =
+        Math.min(W,H)/500;
+
+    const x =
+        W/2;
+
+    let baseY =
+        H-145*scale;
+
+
+    /* الحركة */
+
+    let walk=0;
+
+    let jump=0;
+
+    let rotation=0;
+
+
+    if(animation==="walk"){
+
+        walk =
+            Math.sin(time*.15)*28*scale;
+    }
+
+
+    if(animation==="run"){
+
+        walk =
+            Math.sin(time*.25)*42*scale;
+
+        baseY -=
+            Math.abs(
+                Math.sin(time*.25)
+            )*8*scale;
+    }
+
+
+    if(animation==="jump"){
+
+        jump =
+            Math.abs(
+                Math.sin(time*.08)
+            )*100*scale;
+
+        baseY -= jump;
+    }
+
+
+    if(animation==="fall"){
+
+        rotation =
+            Math.sin(time*.06)*.5;
+
+        baseY +=
+            Math.abs(
+                Math.sin(time*.08)
+            )*80*scale;
+    }
+
+
+    ctx.save();
+
+    ctx.translate(
+        x,
+        baseY
+    );
+
+    ctx.rotate(rotation);
+
+    ctx.translate(
+        -x,
+        -baseY
+    );
+
+
+    ctx.strokeStyle="#111";
+
+    ctx.fillStyle="#111";
+
+    ctx.lineWidth =
+        7*scale;
+
+    ctx.lineCap="round";
+
+    ctx.lineJoin="round";
+
+
+    /* الرأس */
+
+    ctx.fillStyle="#fff";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        baseY-145*scale,
+        55*scale,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.stroke();
+
+
+    /* الشعر */
+
+    ctx.strokeStyle="#111";
+
+    line(
+        x-8*scale,
+        baseY-198*scale,
+        x-3*scale,
+        baseY-210*scale
+    );
+
+    line(
+        x,
+        baseY-198*scale,
+        x+5*scale,
+        baseY-210*scale
+    );
+
+
+    /* الوجه */
+
+    drawFace(
+        x,
+        baseY-35*scale,
+        scale
+    );
+
+
+    /* الرقبة */
+
+    line(
+        x,
+        baseY-90*scale,
+        x,
+        baseY-65*scale
+    );
+
+
+    /* الجسم */
+
+    line(
+        x,
+        baseY-65*scale,
+        x,
+        baseY+25*scale
+    );
+
+
+    /* الذراعين */
+
+    if(animation==="wave"){
+
+        /* يد مرفوعة */
 
         line(
             x,
-            y-65,
-            x+45,
-            y-110-arm
+            baseY-50*scale,
+            x-45*scale,
+            baseY-105*scale
         );
 
-        // اليد
-        circle(
-            x+45,
-            y-110-arm,
-            7
+        line(
+            x-45*scale,
+            baseY-105*scale,
+            x-40*scale,
+            baseY-145*scale
+        );
+
+        /* الكف */
+
+        filledCircle(
+            x-40*scale,
+            baseY-150*scale,
+            9*scale
+        );
+
+    }else if(animation==="punch"){
+
+        line(
+            x,
+            baseY-50*scale,
+            x+75*scale,
+            baseY-55*scale
+        );
+
+        filledCircle(
+            x+82*scale,
+            baseY-55*scale,
+            10*scale
+        );
+
+        line(
+            x,
+            baseY-50*scale,
+            x-40*scale,
+            baseY-10*scale
         );
 
     }else{
 
         line(
             x,
-            y-65,
-            x-45,
-            y-25-arm
+            baseY-50*scale,
+            x-55*scale,
+            baseY-5*scale
         );
 
         line(
             x,
-            y-65,
-            x+45,
-            y-25+arm
+            baseY-50*scale,
+            x+55*scale,
+            baseY-5*scale
+        );
+
+        /* الكفوف */
+
+        filledCircle(
+            x-58*scale,
+            baseY-2*scale,
+            8*scale
+        );
+
+        filledCircle(
+            x+58*scale,
+            baseY-2*scale,
+            8*scale
         );
     }
 
-    // الرجلين
+
+    /* الرجلين */
+
     line(
         x,
-        y,
-        x-35+walk,
-        y+75
+        baseY+25*scale,
+        x-38*scale+walk,
+        baseY+105*scale
     );
 
     line(
         x,
-        y,
-        x+35-walk,
-        y+75
+        baseY+25*scale,
+        x+38*scale-walk,
+        baseY+105*scale
     );
 
-    // العين
-    ctx.fillStyle = color;
 
-    ctx.beginPath();
-    ctx.arc(x-11,y-126,4,0,Math.PI*2);
-    ctx.fill();
+    /* القدمين */
 
-    ctx.beginPath();
-    ctx.arc(x+11,y-126,4,0,Math.PI*2);
-    ctx.fill();
+    ctx.lineWidth =
+        14*scale;
 
-    // ابتسامة
-    ctx.beginPath();
-    ctx.arc(x,y-116,12,0,Math.PI);
-    ctx.stroke();
+    line(
+        x-38*scale+walk,
+        baseY+105*scale,
+        x-60*scale+walk,
+        baseY+105*scale
+    );
 
+    line(
+        x+38*scale-walk,
+        baseY+105*scale,
+        x+60*scale-walk,
+        baseY+105*scale
+    );
+
+
+    ctx.restore();
 }
+
+
+/* =========================
+   الخلفية
+========================= */
 
 function draw(){
 
-    const width = canvas.clientWidth;
-    const height = canvas.clientHeight;
+    ctx.clearRect(
+        0,
+        0,
+        W,
+        H
+    );
 
-    ctx.clearRect(0,0,width,height);
+    ctx.fillStyle="#fff";
 
-    ctx.fillStyle = background;
-    ctx.fillRect(0,0,width,height);
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
 
-    // الأرض
-    ctx.strokeStyle =
-        background === "#111827"
-        ? "#374151"
-        : "#dddddd";
 
-    ctx.lineWidth = 3;
+    /* الأرض */
+
+    ctx.strokeStyle="#dedede";
+
+    ctx.lineWidth=3;
 
     line(
         0,
-        height-100,
-        width,
-        height-100
+        H-40,
+        W,
+        H-40
     );
 
-    // الشخصية
-    drawStickFigure(
-        width/2,
-        height-180
-    );
 
-    // عنوان صغير
-    ctx.font = "18px Arial";
-
-    ctx.fillStyle =
-        background === "#111827"
-        ? "#ffffff"
-        : "#222222";
-
-    ctx.textAlign = "center";
-
-    ctx.fillText(
-        "Stick Figure Studio",
-        width/2,
-        35
-    );
+    drawCharacter();
 }
 
-function animate(){
+
+/* =========================
+   التحكم
+========================= */
+
+function setAnimation(type){
+
+    animation=type;
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "● "+type;
+}
+
+
+function setFace(type){
+
+    face=type;
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        "● "+type;
+}
+
+
+function togglePlay(){
+
+    playing=!playing;
+
+    document.getElementById(
+        "status"
+    ).textContent =
+        playing
+        ? "● يعمل"
+        : "Ⅱ متوقف";
+}
+
+
+document.getElementById(
+    "speed"
+).addEventListener(
+    "input",
+    e=>{
+        speed=
+            Number(e.target.value);
+    }
+);
+
+
+/* =========================
+   التشغيل
+========================= */
+
+function loop(){
 
     if(playing){
-        time += speed;
+
+        time+=speed;
     }
 
     draw();
 
-    requestAnimationFrame(animate);
+    requestAnimationFrame(loop);
 }
 
-function setAnimation(type){
-
-    animation = type;
-
-    document
-        .querySelectorAll(".buttons button")
-        .forEach(btn => btn.classList.remove("active"));
-
-    const button = document.getElementById(type);
-
-    if(button){
-        button.classList.add("active");
-    }
-
-    document.getElementById("status").textContent =
-        "● الحركة: " + type;
-}
-
-function toggleAnimation(){
-
-    playing = !playing;
-
-    document.getElementById("status").textContent =
-        playing ? "● يعمل الآن" : "Ⅱ متوقف";
-}
-
-function changeCharacter(direction){
-
-    character += direction;
-
-    if(character < 0)
-        character = colors.length-1;
-
-    if(character >= colors.length)
-        character = 0;
-}
-
-function changeBackground(color){
-
-    background = color;
-}
-
-document.getElementById("speed").addEventListener(
-    "input",
-    function(){
-
-        speed = Number(this.value);
-
-        document.getElementById("speedValue").textContent =
-            speed.toFixed(1);
-    }
-);
-
-setAnimation("idle");
-
-animate();
+loop();
 
 </script>
 
