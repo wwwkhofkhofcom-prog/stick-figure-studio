@@ -2,190 +2,500 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Stick Figure Studio 3D</title>
 
 <style>
 *{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+}
+
+:root{
+    --bg:#07090d;
+    --panel:#0d1118;
+    --panel2:#111720;
+    --line:#252d39;
+    --text:#f4f7fb;
+    --muted:#8c98aa;
+    --accent:#6d8cff;
+    --accent2:#8b5cf6;
+    --danger:#ff5570;
 }
 
 body{
-  background:#080a0f;
-  color:#fff;
-  font-family:Arial,sans-serif;
-  overflow:hidden;
+    width:100vw;
+    height:100vh;
+    overflow:hidden;
+    background:var(--bg);
+    color:var(--text);
+    font-family:
+        Inter,
+        Arial,
+        sans-serif;
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
 }
 
 .app{
-  width:100vw;
-  height:100vh;
-  display:flex;
-  flex-direction:column;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
 }
 
-/* TOP BAR */
+/* TOP */
+
 .topbar{
-  height:58px;
-  background:#10131b;
-  border-bottom:1px solid #252a35;
-  display:flex;
-  align-items:center;
-  padding:0 18px;
-  gap:20px;
+    height:58px;
+    min-height:58px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:0 15px;
+    background:var(--panel);
+    border-bottom:1px solid var(--line);
 }
 
 .logo{
-  font-size:19px;
-  font-weight:bold;
+    font-size:17px;
+    font-weight:800;
+    margin-right:14px;
+    white-space:nowrap;
 }
 
 .logo span{
-  color:#6c8cff;
+    color:var(--accent);
 }
 
-.tool{
-  background:#181c26;
-  border:1px solid #292f3b;
-  color:white;
-  padding:8px 14px;
-  border-radius:8px;
-  cursor:pointer;
+.top-btn{
+    border:1px solid var(--line);
+    background:#151b24;
+    color:#dfe6f2;
+    padding:8px 12px;
+    border-radius:7px;
+    font-size:12px;
 }
 
-.tool:hover{
-  background:#222837;
+.top-btn:hover{
+    background:#202936;
+}
+
+.top-btn.primary{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:white;
+}
+
+.spacer{
+    flex:1;
+}
+
+.status{
+    font-size:11px;
+    color:#788497;
 }
 
 /* MAIN */
+
 .main{
-  flex:1;
-  display:flex;
-  min-height:0;
+    flex:1;
+    min-height:0;
+    display:flex;
 }
 
 /* LEFT */
-.left{
-  width:220px;
-  background:#0e1118;
-  border-right:1px solid #252a35;
-  padding:15px;
+
+.left-panel{
+    width:215px;
+    min-width:215px;
+    background:var(--panel);
+    border-right:1px solid var(--line);
+    overflow-y:auto;
+    padding:14px;
 }
 
-.section{
-  margin-bottom:25px;
+.panel-title{
+    color:var(--muted);
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin:6px 0 10px;
 }
 
-.section h3{
-  font-size:12px;
-  color:#8d95a8;
-  margin-bottom:12px;
-  text-transform:uppercase;
+.scene-item{
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:10px;
+    margin-bottom:6px;
+    background:#111720;
+    border:1px solid var(--line);
+    border-radius:7px;
+    color:#dce4ef;
+    font-size:12px;
+    cursor:pointer;
 }
 
-.item{
-  background:#171b24;
-  border:1px solid #292f3b;
-  padding:11px;
-  border-radius:8px;
-  margin-bottom:8px;
-  cursor:pointer;
+.scene-item:hover{
+    background:#18202b;
 }
 
-.item:hover{
-  background:#202635;
+.scene-item.selected{
+    border-color:var(--accent);
+    background:#141d30;
+}
+
+.icon{
+    width:24px;
+    height:24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:5px;
+    background:#202734;
 }
 
 /* VIEWPORT */
+
 .viewport{
-  flex:1;
-  position:relative;
-  background:#11151d;
-  overflow:hidden;
+    position:relative;
+    flex:1;
+    min-width:0;
+    background:#11151c;
 }
 
-#scene{
-  width:100%;
-  height:100%;
-  display:block;
+#canvas3d{
+    display:block;
+    width:100%;
+    height:100%;
+}
+
+.viewport-tools{
+    position:absolute;
+    top:14px;
+    left:14px;
+    display:flex;
+    gap:7px;
+}
+
+.view-btn{
+    background:rgba(9,12,17,.85);
+    color:white;
+    border:1px solid #303846;
+    border-radius:7px;
+    padding:8px 10px;
+    font-size:11px;
+}
+
+.view-btn:hover{
+    background:#202733;
 }
 
 .help{
-  position:absolute;
-  bottom:15px;
-  left:15px;
-  background:rgba(0,0,0,.55);
-  padding:9px 13px;
-  border-radius:8px;
-  font-size:12px;
-  color:#b9c0cf;
+    position:absolute;
+    bottom:13px;
+    left:13px;
+    padding:8px 11px;
+    background:rgba(7,9,13,.78);
+    border:1px solid #272e3a;
+    border-radius:7px;
+    color:#8995a7;
+    font-size:10px;
+}
+
+.camera-label{
+    position:absolute;
+    top:15px;
+    right:15px;
+    color:#7e899b;
+    font-size:10px;
 }
 
 /* RIGHT */
-.right{
-  width:230px;
-  background:#0e1118;
-  border-left:1px solid #252a35;
-  padding:15px;
+
+.right-panel{
+    width:245px;
+    min-width:245px;
+    background:var(--panel);
+    border-left:1px solid var(--line);
+    padding:14px;
+    overflow-y:auto;
+}
+
+.control-group{
+    margin-bottom:20px;
 }
 
 .control{
-  margin-bottom:18px;
+    margin-bottom:13px;
 }
 
 .control label{
-  display:block;
-  color:#9da5b8;
-  font-size:12px;
-  margin-bottom:7px;
+    display:flex;
+    justify-content:space-between;
+    color:#a7b1c1;
+    font-size:11px;
+    margin-bottom:6px;
 }
 
-input[type=range]{
-  width:100%;
+.value{
+    color:#68778c;
+}
+
+input[type="range"]{
+    width:100%;
+    accent-color:var(--accent);
+}
+
+select{
+    width:100%;
+    background:#111720;
+    color:#dfe6f1;
+    border:1px solid var(--line);
+    padding:9px;
+    border-radius:7px;
+    outline:none;
+}
+
+.color-row{
+    display:flex;
+    gap:8px;
+}
+
+input[type="color"]{
+    width:45px;
+    height:34px;
+    padding:2px;
+    background:#111720;
+    border:1px solid var(--line);
+    border-radius:6px;
+}
+
+.small-btn{
+    flex:1;
+    border:1px solid var(--line);
+    background:#151b24;
+    color:#dce4ee;
+    padding:8px;
+    border-radius:7px;
+    font-size:11px;
+}
+
+.small-btn:hover{
+    background:#202936;
+}
+
+.danger{
+    border-color:#4a2630;
+    color:#ff8799;
 }
 
 /* TIMELINE */
+
 .timeline{
-  height:180px;
-  background:#0b0e14;
-  border-top:1px solid #252a35;
-  padding:12px;
+    height:190px;
+    min-height:190px;
+    background:#0a0d12;
+    border-top:1px solid var(--line);
+    padding:12px 14px;
 }
 
-.timeline-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
+.timeline-top{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:10px;
 }
 
-.play{
-  background:#6c8cff;
-  border:none;
-  color:white;
-  padding:8px 18px;
-  border-radius:7px;
-  cursor:pointer;
-  font-weight:bold;
+.timeline-title{
+    font-weight:800;
+    font-size:12px;
+    margin-right:10px;
+}
+
+.play-btn{
+    width:34px;
+    height:30px;
+    border:0;
+    border-radius:6px;
+    background:var(--accent);
+    color:white;
+    font-size:13px;
+}
+
+.timeline-btn{
+    height:30px;
+    padding:0 10px;
+    border-radius:6px;
+    border:1px solid var(--line);
+    background:#151a22;
+    color:#dbe3ef;
+    font-size:11px;
+}
+
+.timeline-btn:hover{
+    background:#202733;
+}
+
+.time-display{
+    margin-left:auto;
+    color:#8d99aa;
+    font-size:11px;
+}
+
+.timeline-area{
+    position:relative;
+    height:115px;
+    background:#0f141b;
+    border:1px solid var(--line);
+    border-radius:7px;
+    overflow:hidden;
+}
+
+.ruler{
+    position:absolute;
+    top:0;
+    left:70px;
+    right:0;
+    height:26px;
+    border-bottom:1px solid var(--line);
+}
+
+.tick{
+    position:absolute;
+    top:0;
+    height:26px;
+    border-left:1px solid #333c4a;
+    color:#657184;
+    font-size:9px;
+    padding-left:4px;
+    padding-top:5px;
+}
+
+.track-label{
+    position:absolute;
+    left:0;
+    top:26px;
+    bottom:0;
+    width:70px;
+    background:#11161d;
+    border-right:1px solid var(--line);
+    color:#8995a6;
+    font-size:10px;
+    padding:11px 8px;
 }
 
 .track{
-  height:45px;
-  background:#151922;
-  border:1px solid #292f3b;
-  border-radius:6px;
-  position:relative;
+    position:absolute;
+    left:70px;
+    right:0;
+    top:26px;
+    bottom:0;
+    background:
+        repeating-linear-gradient(
+            to right,
+            transparent 0,
+            transparent 49px,
+            rgba(255,255,255,.035) 50px
+        );
 }
 
-.key{
-  width:10px;
-  height:10px;
-  background:#ffcc4d;
-  position:absolute;
-  top:17px;
-  transform:rotate(45deg);
+.keyframe{
+    position:absolute;
+    width:11px;
+    height:11px;
+    background:#ffd166;
+    transform:rotate(45deg);
+    top:17px;
+    cursor:pointer;
+}
+
+.keyframe:hover{
+    transform:rotate(45deg) scale(1.3);
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:rgba(0,0,0,.65);
+    z-index:20;
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-box{
+    width:min(420px,90vw);
+    background:#10151d;
+    border:1px solid #303846;
+    border-radius:12px;
+    padding:20px;
+    box-shadow:0 20px 60px rgba(0,0,0,.5);
+}
+
+.modal-box h2{
+    margin-bottom:8px;
+}
+
+.modal-box p{
+    color:#8f9bad;
+    font-size:12px;
+    line-height:1.6;
+}
+
+.modal-actions{
+    display:flex;
+    gap:8px;
+    margin-top:18px;
+}
+
+@media(max-width:850px){
+    .left-panel{
+        width:170px;
+        min-width:170px;
+    }
+
+    .right-panel{
+        width:190px;
+        min-width:190px;
+    }
+
+    .logo{
+        font-size:14px;
+    }
+
+    .top-btn{
+        padding:7px 8px;
+    }
+}
+
+@media(max-width:650px){
+    .left-panel,
+    .right-panel{
+        display:none;
+    }
+
+    .timeline{
+        height:165px;
+        min-height:165px;
+    }
 }
 </style>
 </head>
@@ -194,146 +504,522 @@ input[type=range]{
 
 <div class="app">
 
-  <div class="topbar">
+<!-- TOP BAR -->
+<header class="topbar">
+
     <div class="logo">
-      Stick Figure <span>Studio 3D</span>
+        Stick Figure <span>Studio 3D</span>
     </div>
 
-    <button class="tool" onclick="resetCamera()">Reset Camera</button>
-    <button class="tool" onclick="addKeyframe()">◆ Keyframe</button>
-  </div>
+    <button class="top-btn" onclick="newProject()">
+        New
+    </button>
 
-  <div class="main">
+    <button class="top-btn" onclick="saveProject()">
+        Save
+    </button>
 
-    <!-- LEFT PANEL -->
-    <aside class="left">
+    <button class="top-btn" onclick="document.getElementById('fileInput').click()">
+        Load
+    </button>
 
-      <div class="section">
-        <h3>Scene</h3>
+    <input
+        id="fileInput"
+        type="file"
+        accept=".json"
+        style="display:none"
+        onchange="loadProject(event)"
+    >
 
-        <div class="item" onclick="selectPart('body')">
-          🧍 Character
-        </div>
+    <button class="top-btn primary" onclick="addCharacter()">
+        + Character
+    </button>
 
-        <div class="item">
-          ◼ Ground
-        </div>
+    <div class="spacer"></div>
 
-        <div class="item">
-          💡 Light
-        </div>
+    <div class="status" id="status">
+        Ready
+    </div>
 
-        <div class="item">
-          📷 Camera
-        </div>
-      </div>
-
-      <div class="section">
-        <h3>Animation</h3>
-
-        <div class="item" onclick="animateWalk()">
-          🚶 Walk
-        </div>
-
-        <div class="item" onclick="animateJump()">
-          🦘 Jump
-        </div>
-
-        <div class="item" onclick="animateWave()">
-          👋 Wave
-        </div>
-      </div>
-
-    </aside>
+</header>
 
 
-    <!-- 3D VIEWPORT -->
-    <main class="viewport">
-      <canvas id="scene"></canvas>
+<!-- MAIN -->
+<div class="main">
 
-      <div class="help">
-        Drag = Rotate Camera &nbsp; | &nbsp;
-        Wheel = Zoom
-      </div>
-    </main>
+<!-- LEFT PANEL -->
+<aside class="left-panel">
 
+    <div class="panel-title">
+        Scene
+    </div>
 
-    <!-- RIGHT PANEL -->
-    <aside class="right">
+    <div
+        class="scene-item selected"
+        id="characterItem"
+        onclick="selectCharacter()"
+    >
+        <div class="icon">🧍</div>
+        <div>Character 1</div>
+    </div>
 
-      <div class="section">
-        <h3>Character</h3>
+    <div class="scene-item">
+        <div class="icon">◼</div>
+        <div>Ground</div>
+    </div>
 
-        <div class="control">
-          <label>Arm Rotation</label>
-          <input
-            type="range"
-            min="-180"
-            max="180"
-            value="0"
-            oninput="rotateArm(this.value)"
-          >
-        </div>
+    <div class="scene-item">
+        <div class="icon">☀</div>
+        <div>Light</div>
+    </div>
 
-        <div class="control">
-          <label>Leg Rotation</label>
-          <input
-            type="range"
-            min="-180"
-            max="180"
-            value="0"
-            oninput="rotateLeg(this.value)"
-          >
-        </div>
-
-        <div class="control">
-          <label>Head Rotation</label>
-          <input
-            type="range"
-            min="-180"
-            max="180"
-            value="0"
-            oninput="rotateHead(this.value)"
-          >
-        </div>
-
-      </div>
-
-      <div class="section">
-        <h3>Environment</h3>
-
-        <div class="control">
-          <label>Light</label>
-          <input type="range" min="0" max="2" step=".01" value="1"
-                 oninput="changeLight(this.value)">
-        </div>
-
-      </div>
-
-    </aside>
-
-  </div>
+    <div class="scene-item">
+        <div class="icon">📷</div>
+        <div>Camera</div>
+    </div>
 
 
-  <!-- TIMELINE -->
-  <div class="timeline">
+    <div class="panel-title" style="margin-top:25px">
+        Animations
+    </div>
 
-    <div class="timeline-head">
-      <strong>Timeline</strong>
+    <div
+        class="scene-item"
+        onclick="playPreset('idle')"
+    >
+        <div class="icon">🧍</div>
+        <div>Idle</div>
+    </div>
 
-      <div>
-        <button class="play" onclick="togglePlay()" id="playBtn">
-          ▶ Play
+    <div
+        class="scene-item"
+        onclick="playPreset('walk')"
+    >
+        <div class="icon">🚶</div>
+        <div>Walk</div>
+    </div>
+
+    <div
+        class="scene-item"
+        onclick="playPreset('run')"
+    >
+        <div class="icon">🏃</div>
+        <div>Run</div>
+    </div>
+
+    <div
+        class="scene-item"
+        onclick="playPreset('jump')"
+    >
+        <div class="icon">⬆</div>
+        <div>Jump</div>
+    </div>
+
+    <div
+        class="scene-item"
+        onclick="playPreset('wave')"
+    >
+        <div class="icon">👋</div>
+        <div>Wave</div>
+    </div>
+
+</aside>
+
+
+<!-- VIEWPORT -->
+<section class="viewport">
+
+    <canvas id="canvas3d"></canvas>
+
+    <div class="viewport-tools">
+
+        <button
+            class="view-btn"
+            onclick="frontView()"
+        >
+            Front
         </button>
-      </div>
+
+        <button
+            class="view-btn"
+            onclick="sideView()"
+        >
+            Side
+        </button>
+
+        <button
+            class="view-btn"
+            onclick="topView()"
+        >
+            Top
+        </button>
+
+        <button
+            class="view-btn"
+            onclick="resetCamera()"
+        >
+            Reset
+        </button>
+
     </div>
 
-    <div class="track" id="track">
-      <div class="key" style="left:20px"></div>
-      <div class="key" style="left:160px"></div>
+    <div class="camera-label">
+        3D VIEWPORT
     </div>
 
-  </div>
+    <div class="help">
+        Drag = Rotate &nbsp; • &nbsp;
+        Wheel = Zoom &nbsp; • &nbsp;
+        Drag joints = Pose
+    </div>
+
+</section>
+
+
+<!-- RIGHT PANEL -->
+<aside class="right-panel">
+
+    <div class="panel-title">
+        Character
+    </div>
+
+    <div class="control-group">
+
+        <div class="control">
+
+            <label>
+                Body Height
+                <span class="value" id="heightValue">1.00</span>
+            </label>
+
+            <input
+                id="height"
+                type="range"
+                min=".5"
+                max="2"
+                step=".01"
+                value="1"
+                oninput="changeHeight(this.value)"
+            >
+
+        </div>
+
+
+        <div class="control">
+
+            <label>
+                Head Size
+                <span class="value" id="headValue">1.00</span>
+            </label>
+
+            <input
+                id="headSize"
+                type="range"
+                min=".6"
+                max="1.5"
+                step=".01"
+                value="1"
+                oninput="changeHeadSize(this.value)"
+            >
+
+        </div>
+
+
+        <div class="control">
+
+            <label>
+                Bone Width
+                <span class="value" id="boneValue">1.00</span>
+            </label>
+
+            <input
+                id="boneWidth"
+                type="range"
+                min=".5"
+                max="2"
+                step=".01"
+                value="1"
+                oninput="changeBoneWidth(this.value)"
+            >
+
+        </div>
+
+
+        <div class="control">
+
+            <label>
+                Character Color
+            </label>
+
+            <div class="color-row">
+
+                <input
+                    id="colorPicker"
+                    type="color"
+                    value="#ffffff"
+                    onchange="changeColor(this.value)"
+                >
+
+                <button
+                    class="small-btn"
+                    onclick="changeColor('#ffffff')"
+                >
+                    White
+                </button>
+
+                <button
+                    class="small-btn"
+                    onclick="changeColor('#111111')"
+                >
+                    Black
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="panel-title">
+        Selected Joint
+    </div>
+
+    <div class="control-group">
+
+        <div class="control">
+
+            <label>
+                Rotation X
+                <span id="rxValue">0°</span>
+            </label>
+
+            <input
+                id="rx"
+                type="range"
+                min="-180"
+                max="180"
+                value="0"
+                oninput="jointRotation('x',this.value)"
+            >
+
+        </div>
+
+
+        <div class="control">
+
+            <label>
+                Rotation Y
+                <span id="ryValue">0°</span>
+            </label>
+
+            <input
+                id="ry"
+                type="range"
+                min="-180"
+                max="180"
+                value="0"
+                oninput="jointRotation('y',this.value)"
+            >
+
+        </div>
+
+
+        <div class="control">
+
+            <label>
+                Rotation Z
+                <span id="rzValue">0°</span>
+            </label>
+
+            <input
+                id="rz"
+                type="range"
+                min="-180"
+                max="180"
+                value="0"
+                oninput="jointRotation('z',this.value)"
+            >
+
+        </div>
+
+    </div>
+
+
+    <div class="panel-title">
+        Animation
+    </div>
+
+    <div class="control-group">
+
+        <div class="control">
+
+            <label>
+                Preset
+            </label>
+
+            <select
+                id="preset"
+                onchange="playPreset(this.value)"
+            >
+                <option value="idle">Idle</option>
+                <option value="walk">Walk</option>
+                <option value="run">Run</option>
+                <option value="jump">Jump</option>
+                <option value="wave">Wave</option>
+            </select>
+
+        </div>
+
+        <div style="display:flex;gap:7px">
+
+            <button
+                class="small-btn"
+                onclick="addKeyframe()"
+            >
+                + Keyframe
+            </button>
+
+            <button
+                class="small-btn danger"
+                onclick="resetPose()"
+            >
+                Reset Pose
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div class="panel-title">
+        Environment
+    </div>
+
+    <div class="control">
+
+        <label>
+            Light
+            <span id="lightValue">1.00</span>
+        </label>
+
+        <input
+            type="range"
+            min=".1"
+            max="2.5"
+            step=".01"
+            value="1"
+            oninput="changeLight(this.value)"
+        >
+
+    </div>
+
+</aside>
+
+</div>
+
+
+<!-- TIMELINE -->
+<section class="timeline">
+
+    <div class="timeline-top">
+
+        <div class="timeline-title">
+            Timeline
+        </div>
+
+        <button
+            class="play-btn"
+            id="playButton"
+            onclick="togglePlay()"
+        >
+            ▶
+        </button>
+
+        <button
+            class="timeline-btn"
+            onclick="previousFrame()"
+        >
+            ◀
+        </button>
+
+        <button
+            class="timeline-btn"
+            onclick="nextFrame()"
+        >
+            ▶
+        </button>
+
+        <button
+            class="timeline-btn"
+            onclick="addKeyframe()"
+        >
+            ◆ Keyframe
+        </button>
+
+        <div class="time-display">
+            <span id="frameNumber">Frame 0</span>
+            &nbsp; | &nbsp;
+            <span id="timeNumber">0.00s</span>
+        </div>
+
+    </div>
+
+
+    <div class="timeline-area">
+
+        <div class="ruler" id="ruler"></div>
+
+        <div class="track-label">
+            Character
+        </div>
+
+        <div
+            class="track"
+            id="track"
+        ></div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<!-- MODAL -->
+<div
+    class="modal"
+    id="modal"
+>
+
+    <div class="modal-box">
+
+        <h2>New Project</h2>
+
+        <p>
+            This will reset the current character,
+            animation and camera.
+        </p>
+
+        <div class="modal-actions">
+
+            <button
+                class="small-btn"
+                onclick="closeModal()"
+            >
+                Cancel
+            </button>
+
+            <button
+                class="small-btn"
+                onclick="confirmNewProject()"
+            >
+                Create New
+            </button>
+
+        </div>
+
+    </div>
 
 </div>
 
@@ -343,417 +1029,1865 @@ input[type=range]{
 
 <script>
 
-const canvas = document.getElementById("scene");
+/* =========================================================
+   GLOBAL
+========================================================= */
 
-const renderer = new THREE.WebGLRenderer({
-  canvas,
-  antialias:true
-});
+let scene;
+let camera;
+let renderer;
 
-renderer.setPixelRatio(window.devicePixelRatio);
+let character;
+let parts = {};
 
-renderer.setSize(
-  canvas.clientWidth,
-  canvas.clientHeight
-);
+let selectedJoint = null;
 
+let draggingJoint = false;
+let draggingCamera = false;
 
-/* CAMERA */
+let previousMouseX = 0;
+let previousMouseY = 0;
 
-const camera = new THREE.PerspectiveCamera(
-  45,
-  canvas.clientWidth / canvas.clientHeight,
-  0.1,
-  1000
-);
+let cameraTheta = 0.65;
+let cameraPhi = 1.1;
+let cameraRadius = 8;
 
-camera.position.set(5,4,7);
+let playing = false;
+let currentFrame = 0;
 
+let currentAnimation = "idle";
 
-/* SCENE */
+let keyframes = [];
 
-const scene = new THREE.Scene();
-
-scene.background = new THREE.Color(0x11151d);
-
-
-/* LIGHT */
-
-const ambient = new THREE.AmbientLight(
-  0xffffff,
-  1
-);
-
-scene.add(ambient);
-
-const light = new THREE.DirectionalLight(
-  0xffffff,
-  2
-);
-
-light.position.set(5,8,5);
-
-scene.add(light);
+let lightSource;
+let ambientLight;
 
 
-/* GROUND */
+/* =========================================================
+   INITIALIZE
+========================================================= */
 
-const groundGeometry =
-  new THREE.PlaneGeometry(20,20);
+function init(){
 
-const groundMaterial =
-  new THREE.MeshStandardMaterial({
-    color:0x202631
-  });
+    const canvas =
+        document.getElementById("canvas3d");
 
-const ground =
-  new THREE.Mesh(
-    groundGeometry,
-    groundMaterial
-  );
+    renderer =
+        new THREE.WebGLRenderer({
+            canvas:canvas,
+            antialias:true
+        });
 
-ground.rotation.x=-Math.PI/2;
-
-scene.add(ground);
-
-
-/* CHARACTER */
-
-const character = new THREE.Group();
-
-scene.add(character);
-
-
-/* MATERIAL */
-
-const material =
-  new THREE.MeshStandardMaterial({
-    color:0xffffff
-  });
-
-
-/* CREATE CYLINDER BONE */
-
-function bone(length, radius=.08){
-
-  const geometry =
-    new THREE.CylinderGeometry(
-      radius,
-      radius,
-      length,
-      12
+    renderer.setPixelRatio(
+        Math.min(window.devicePixelRatio,2)
     );
 
-  const mesh =
-    new THREE.Mesh(
-      geometry,
-      material
+    renderer.setSize(
+        canvas.clientWidth,
+        canvas.clientHeight
     );
 
-  return mesh;
+
+    scene =
+        new THREE.Scene();
+
+    scene.background =
+        new THREE.Color(0x11151c);
+
+
+    camera =
+        new THREE.PerspectiveCamera(
+            45,
+            canvas.clientWidth /
+            canvas.clientHeight,
+            .1,
+            100
+        );
+
+
+    ambientLight =
+        new THREE.AmbientLight(
+            0xffffff,
+            1
+        );
+
+    scene.add(ambientLight);
+
+
+    lightSource =
+        new THREE.DirectionalLight(
+            0xffffff,
+            1.8
+        );
+
+    lightSource.position.set(
+        5,
+        9,
+        6
+    );
+
+    scene.add(lightSource);
+
+
+    createGround();
+
+    createCharacter();
+
+    setupMouse();
+
+    createRuler();
+
+    resetCamera();
+
+    animate();
 }
 
 
-/* BODY */
+/* =========================================================
+   GROUND
+========================================================= */
 
-const body =
-  bone(2,.12);
+function createGround(){
 
-body.position.y=2.3;
+    const geometry =
+        new THREE.PlaneGeometry(
+            30,
+            30
+        );
 
-character.add(body);
+    const material =
+        new THREE.MeshStandardMaterial({
+            color:0x202630,
+            roughness:.9
+        });
 
+    const ground =
+        new THREE.Mesh(
+            geometry,
+            material
+        );
 
-/* HEAD */
+    ground.rotation.x =
+        -Math.PI / 2;
 
-const headGeometry =
-  new THREE.SphereGeometry(
-    .45,
-    24,
-    24
-  );
+    ground.position.y = 0;
 
-const head =
-  new THREE.Mesh(
-    headGeometry,
-    material
-  );
-
-head.position.y=3.55;
-
-character.add(head);
-
-
-/* ARMS */
-
-const leftArm =
-  bone(1.5,.09);
-
-leftArm.position.set(-.9,2.65,0);
-
-leftArm.rotation.z=-.35;
-
-character.add(leftArm);
+    scene.add(ground);
 
 
-const rightArm =
-  bone(1.5,.09);
+    const grid =
+        new THREE.GridHelper(
+            30,
+            30,
+            0x3a4350,
+            0x252c36
+        );
 
-rightArm.position.set(.9,2.65,0);
+    grid.position.y=.005;
 
-rightArm.rotation.z=.35;
-
-character.add(rightArm);
-
-
-/* LEGS */
-
-const leftLeg =
-  bone(1.8,.1);
-
-leftLeg.position.set(-.35,1,0);
-
-leftLeg.rotation.z=-.12;
-
-character.add(leftLeg);
+    scene.add(grid);
+}
 
 
-const rightLeg =
-  bone(1.8,.1);
+/* =========================================================
+   BONE
+========================================================= */
 
-rightLeg.position.set(.35,1,0);
+function createBone(
+    name,
+    length,
+    radius,
+    color
+){
 
-rightLeg.rotation.z=.12;
+    const geometry =
+        new THREE.CylinderGeometry(
+            radius,
+            radius,
+            length,
+            12
+        );
 
-character.add(rightLeg);
+    const material =
+        new THREE.MeshStandardMaterial({
+            color:color
+        });
 
+    const mesh =
+        new THREE.Mesh(
+            geometry,
+            material
+        );
 
-/* CAMERA CONTROL */
+    mesh.name=name;
 
-let dragging=false;
-let lastX=0;
-let lastY=0;
+    mesh.userData.joint=name;
 
-canvas.addEventListener("mousedown",e=>{
-  dragging=true;
-  lastX=e.clientX;
-  lastY=e.clientY;
-});
-
-window.addEventListener("mouseup",()=>{
-  dragging=false;
-});
-
-window.addEventListener("mousemove",e=>{
-
-  if(!dragging) return;
-
-  const dx=e.clientX-lastX;
-  const dy=e.clientY-lastY;
-
-  camera.position.x += dx*.01;
-  camera.position.y -= dy*.01;
-
-  camera.lookAt(0,2,0);
-
-  lastX=e.clientX;
-  lastY=e.clientY;
-});
+    return mesh;
+}
 
 
-canvas.addEventListener("wheel",e=>{
+/* =========================================================
+   JOINT
+========================================================= */
 
-  camera.position.z += e.deltaY*.01;
+function createJoint(
+    name,
+    size,
+    color
+){
 
-  camera.position.z =
-    Math.max(3,Math.min(15,camera.position.z));
+    const geometry =
+        new THREE.SphereGeometry(
+            size,
+            16,
+            16
+        );
 
-});
+    const material =
+        new THREE.MeshStandardMaterial({
+            color:color
+        });
+
+    const mesh =
+        new THREE.Mesh(
+            geometry,
+            material
+        );
+
+    mesh.name=name;
+
+    mesh.userData.joint=name;
+
+    return mesh;
+}
 
 
-/* CONTROLS */
+/* =========================================================
+   CHARACTER
+========================================================= */
 
-function rotateArm(value){
+function createCharacter(){
 
-  rightArm.rotation.z =
-    THREE.MathUtils.degToRad(
-      Number(value)
+    character =
+        new THREE.Group();
+
+    character.name =
+        "Character 1";
+
+    character.position.y=0;
+
+    scene.add(character);
+
+
+    const color=0xffffff;
+
+
+    /* ROOT */
+
+    const root =
+        createJoint(
+            "root",
+            .13,
+            color
+        );
+
+    root.position.set(
+        0,
+        2,
+        0
     );
 
-}
+    character.add(root);
+
+    parts.root=root;
 
 
-function rotateLeg(value){
+    /* BODY */
 
-  rightLeg.rotation.z =
-    THREE.MathUtils.degToRad(
-      Number(value)
+    const body =
+        createBone(
+            "body",
+            2,
+            .11,
+            color
+        );
+
+    body.position.set(
+        0,
+        2.9,
+        0
     );
 
-}
+    character.add(body);
+
+    parts.body=body;
 
 
-function rotateHead(value){
+    /* NECK */
 
-  head.rotation.y =
-    THREE.MathUtils.degToRad(
-      Number(value)
+    const neck =
+        createBone(
+            "neck",
+            .35,
+            .08,
+            color
+        );
+
+    neck.position.set(
+        0,
+        4.05,
+        0
     );
 
+    character.add(neck);
+
+    parts.neck=neck;
+
+
+    /* HEAD */
+
+    const head =
+        createJoint(
+            "head",
+            .43,
+            color
+        );
+
+    head.position.set(
+        0,
+        4.55,
+        0
+    );
+
+    character.add(head);
+
+    parts.head=head;
+
+
+    /* SHOULDERS */
+
+    const leftShoulder =
+        createJoint(
+            "leftShoulder",
+            .12,
+            color
+        );
+
+    leftShoulder.position.set(
+        -.58,
+        3.65,
+        0
+    );
+
+    character.add(leftShoulder);
+
+    parts.leftShoulder=
+        leftShoulder;
+
+
+    const rightShoulder =
+        createJoint(
+            "rightShoulder",
+            .12,
+            color
+        );
+
+    rightShoulder.position.set(
+        .58,
+        3.65,
+        0
+    );
+
+    character.add(rightShoulder);
+
+    parts.rightShoulder=
+        rightShoulder;
+
+
+    /* LEFT ARM */
+
+    const leftUpperArm =
+        createBone(
+            "leftUpperArm",
+            1.05,
+            .075,
+            color
+        );
+
+    leftUpperArm.position.set(
+        -.98,
+        3.15,
+        0
+    );
+
+    leftUpperArm.rotation.z=.15;
+
+    character.add(leftUpperArm);
+
+    parts.leftUpperArm=
+        leftUpperArm;
+
+
+    const leftElbow =
+        createJoint(
+            "leftElbow",
+            .1,
+            color
+        );
+
+    leftElbow.position.set(
+        -1.18,
+        2.65,
+        0
+    );
+
+    character.add(leftElbow);
+
+    parts.leftElbow=
+        leftElbow;
+
+
+    const leftForearm =
+        createBone(
+            "leftForearm",
+            .9,
+            .07,
+            color
+        );
+
+    leftForearm.position.set(
+        -1.28,
+        2.2,
+        0
+    );
+
+    leftForearm.rotation.z=.12;
+
+    character.add(leftForearm);
+
+    parts.leftForearm=
+        leftForearm;
+
+
+    const leftHand =
+        createJoint(
+            "leftHand",
+            .11,
+            color
+        );
+
+    leftHand.position.set(
+        -1.38,
+        1.75,
+        0
+    );
+
+    character.add(leftHand);
+
+    parts.leftHand=
+        leftHand;
+
+
+    /* RIGHT ARM */
+
+    const rightUpperArm =
+        createBone(
+            "rightUpperArm",
+            1.05,
+            .075,
+            color
+        );
+
+    rightUpperArm.position.set(
+        .98,
+        3.15,
+        0
+    );
+
+    rightUpperArm.rotation.z=-.15;
+
+    character.add(rightUpperArm);
+
+    parts.rightUpperArm=
+        rightUpperArm;
+
+
+    const rightElbow =
+        createJoint(
+            "rightElbow",
+            .1,
+            color
+        );
+
+    rightElbow.position.set(
+        1.18,
+        2.65,
+        0
+    );
+
+    character.add(rightElbow);
+
+    parts.rightElbow=
+        rightElbow;
+
+
+    const rightForearm =
+        createBone(
+            "rightForearm",
+            .9,
+            .07,
+            color
+        );
+
+    rightForearm.position.set(
+        1.28,
+        2.2,
+        0
+    );
+
+    rightForearm.rotation.z=-.12;
+
+    character.add(rightForearm);
+
+    parts.rightForearm=
+        rightForearm;
+
+
+    const rightHand =
+        createJoint(
+            "rightHand",
+            .11,
+            color
+        );
+
+    rightHand.position.set(
+        1.38,
+        1.75,
+        0
+    );
+
+    character.add(rightHand);
+
+    parts.rightHand=
+        rightHand;
+
+
+    /* HIPS */
+
+    const leftHip =
+        createJoint(
+            "leftHip",
+            .13,
+            color
+        );
+
+    leftHip.position.set(
+        -.28,
+        1.9,
+        0
+    );
+
+    character.add(leftHip);
+
+    parts.leftHip=
+        leftHip;
+
+
+    const rightHip =
+        createJoint(
+            "rightHip",
+            .13,
+            color
+        );
+
+    rightHip.position.set(
+        .28,
+        1.9,
+        0
+    );
+
+    character.add(rightHip);
+
+    parts.rightHip=
+        rightHip;
+
+
+    /* LEFT LEG */
+
+    const leftThigh =
+        createBone(
+            "leftThigh",
+            1.15,
+            .09,
+            color
+        );
+
+    leftThigh.position.set(
+        -.28,
+        1.32,
+        0
+    );
+
+    character.add(leftThigh);
+
+    parts.leftThigh=
+        leftThigh;
+
+
+    const leftKnee =
+        createJoint(
+            "leftKnee",
+            .11,
+            color
+        );
+
+    leftKnee.position.set(
+        -.28,
+        .75,
+        0
+    );
+
+    character.add(leftKnee);
+
+    parts.leftKnee=
+        leftKnee;
+
+
+    const leftShin =
+        createBone(
+            "leftShin",
+            1.2,
+            .08,
+            color
+        );
+
+    leftShin.position.set(
+        -.28,
+        .35,
+        0
+    );
+
+    character.add(leftShin);
+
+    parts.leftShin=
+        leftShin;
+
+
+    const leftFoot =
+        createJoint(
+            "leftFoot",
+            .14,
+            color
+        );
+
+    leftFoot.position.set(
+        -.28,
+        .08,
+        .18
+    );
+
+    character.add(leftFoot);
+
+    parts.leftFoot=
+        leftFoot;
+
+
+    /* RIGHT LEG */
+
+    const rightThigh =
+        createBone(
+            "rightThigh",
+            1.15,
+            .09,
+            color
+        );
+
+    rightThigh.position.set(
+        .28,
+        1.32,
+        0
+    );
+
+    character.add(rightThigh);
+
+    parts.rightThigh=
+        rightThigh;
+
+
+    const rightKnee =
+        createJoint(
+            "rightKnee",
+            .11,
+            color
+        );
+
+    rightKnee.position.set(
+        .28,
+        .75,
+        0
+    );
+
+    character.add(rightKnee);
+
+    parts.rightKnee=
+        rightKnee;
+
+
+    const rightShin =
+        createBone(
+            "rightShin",
+            1.2,
+            .08,
+            color
+        );
+
+    rightShin.position.set(
+        .28,
+        .35,
+        0
+    );
+
+    character.add(rightShin);
+
+    parts.rightShin=
+        rightShin;
+
+
+    const rightFoot =
+        createJoint(
+            "rightFoot",
+            .14,
+            color
+        );
+
+    rightFoot.position.set(
+        .28,
+        .08,
+        .18
+    );
+
+    character.add(rightFoot);
+
+    parts.rightFoot=
+        rightFoot;
+
+
+    /* MAKE JOINTS CLICKABLE */
+
+    Object.values(parts).forEach(
+        p => p.userData.clickable=true
+    );
 }
 
 
-function changeLight(value){
+/* =========================================================
+   MOUSE
+========================================================= */
 
-  ambient.intensity =
-    Number(value);
+function setupMouse(){
 
+    const canvas =
+        document.getElementById("canvas3d");
+
+
+    canvas.addEventListener(
+        "pointerdown",
+        e => {
+
+            const rect =
+                canvas.getBoundingClientRect();
+
+            const mouse =
+                new THREE.Vector2(
+                    ((e.clientX-rect.left) /
+                    rect.width)*2-1,
+
+                    -((e.clientY-rect.top) /
+                    rect.height)*2+1
+                );
+
+
+            const raycaster =
+                new THREE.Raycaster();
+
+            raycaster.setFromCamera(
+                mouse,
+                camera
+            );
+
+
+            const objects =
+                Object.values(parts);
+
+            const hits =
+                raycaster.intersectObjects(
+                    objects
+                );
+
+
+            if(hits.length){
+
+                selectedJoint =
+                    hits[0].object;
+
+                draggingJoint=true;
+
+                selectJoint(
+                    selectedJoint
+                );
+
+                return;
+            }
+
+
+            draggingCamera=true;
+
+            previousMouseX=e.clientX;
+            previousMouseY=e.clientY;
+        }
+    );
+
+
+    window.addEventListener(
+        "pointerup",
+        () => {
+
+            draggingJoint=false;
+            draggingCamera=false;
+        }
+    );
+
+
+    window.addEventListener(
+        "pointermove",
+        e => {
+
+            if(draggingCamera){
+
+                const dx =
+                    e.clientX-
+                    previousMouseX;
+
+                const dy =
+                    e.clientY-
+                    previousMouseY;
+
+                cameraTheta -=
+                    dx*.008;
+
+                cameraPhi +=
+                    dy*.008;
+
+                cameraPhi =
+                    Math.max(
+                        .25,
+                        Math.min(
+                            2.6,
+                            cameraPhi
+                        )
+                    );
+
+                updateCamera();
+
+                previousMouseX=
+                    e.clientX;
+
+                previousMouseY=
+                    e.clientY;
+            }
+
+
+            if(draggingJoint &&
+               selectedJoint){
+
+                selectedJoint.rotation.y +=
+                    e.movementX*.01;
+
+                selectedJoint.rotation.x +=
+                    e.movementY*.01;
+
+                updateSliders();
+            }
+
+        }
+    );
+
+
+    canvas.addEventListener(
+        "wheel",
+        e => {
+
+            cameraRadius +=
+                e.deltaY*.008;
+
+            cameraRadius =
+                Math.max(
+                    3,
+                    Math.min(
+                        18,
+                        cameraRadius
+                    )
+                );
+
+            updateCamera();
+        }
+    );
 }
 
 
-/* CAMERA RESET */
+/* =========================================================
+   CAMERA
+========================================================= */
+
+function updateCamera(){
+
+    camera.position.x =
+        Math.sin(cameraTheta) *
+        Math.cos(cameraPhi) *
+        cameraRadius;
+
+    camera.position.z =
+        Math.cos(cameraTheta) *
+        Math.cos(cameraPhi) *
+        cameraRadius;
+
+    camera.position.y =
+        Math.sin(cameraPhi) *
+        cameraRadius;
+
+    camera.lookAt(
+        0,
+        2.3,
+        0
+    );
+}
+
 
 function resetCamera(){
 
-  camera.position.set(5,4,7);
+    cameraTheta=.65;
+    cameraPhi=1.1;
+    cameraRadius=8;
 
-  camera.lookAt(0,2,0);
-
+    updateCamera();
 }
 
 
-/* KEYFRAME */
+function frontView(){
 
-function addKeyframe(){
+    cameraTheta=0;
+    cameraPhi=1.1;
+    cameraRadius=8;
 
-  const track =
-    document.getElementById("track");
-
-  const key =
-    document.createElement("div");
-
-  key.className="key";
-
-  key.style.left =
-    Math.random()*90+"%";
-
-  track.appendChild(key);
-
+    updateCamera();
 }
 
 
-/* ANIMATIONS */
+function sideView(){
 
-let animation=null;
+    cameraTheta=Math.PI/2;
+    cameraPhi=1.1;
+    cameraRadius=8;
 
-function animateWalk(){
-
-  animation="walk";
-
-}
-
-function animateJump(){
-
-  animation="jump";
-
-}
-
-function animateWave(){
-
-  animation="wave";
-
+    updateCamera();
 }
 
 
-/* PLAY */
+function topView(){
 
-let playing=false;
+    cameraTheta=0;
+    cameraPhi=2.9;
+    cameraRadius=8;
+
+    updateCamera();
+}
+
+
+/* =========================================================
+   JOINT SELECT
+========================================================= */
+
+function selectJoint(joint){
+
+    selectedJoint=joint;
+
+    document.getElementById(
+        "status"
+    ).innerText=
+        "Selected: "+joint.name;
+
+    updateSliders();
+}
+
+
+function updateSliders(){
+
+    if(!selectedJoint)
+        return;
+
+    const x =
+        THREE.MathUtils.radToDeg(
+            selectedJoint.rotation.x
+        );
+
+    const y =
+        THREE.MathUtils.radToDeg(
+            selectedJoint.rotation.y
+        );
+
+    const z =
+        THREE.MathUtils.radToDeg(
+            selectedJoint.rotation.z
+        );
+
+
+    document.getElementById("rx").value=x;
+    document.getElementById("ry").value=y;
+    document.getElementById("rz").value=z;
+
+    document.getElementById(
+        "rxValue"
+    ).innerText=
+        Math.round(x)+"°";
+
+    document.getElementById(
+        "ryValue"
+    ).innerText=
+        Math.round(y)+"°";
+
+    document.getElementById(
+        "rzValue"
+    ).innerText=
+        Math.round(z)+"°";
+}
+
+
+function jointRotation(
+    axis,
+    value
+){
+
+    if(!selectedJoint)
+        return;
+
+    const radians =
+        THREE.MathUtils.degToRad(
+            Number(value)
+        );
+
+    selectedJoint.rotation[axis]=
+        radians;
+
+    document.getElementById(
+        axis==="x"
+        ?"rxValue"
+        :axis==="y"
+        ?"ryValue"
+        :"rzValue"
+    ).innerText=
+        Math.round(Number(value))+"°";
+}
+
+
+/* =========================================================
+   CHARACTER CONTROLS
+========================================================= */
+
+function changeHeight(value){
+
+    const v=Number(value);
+
+    character.scale.y=v;
+
+    document.getElementById(
+        "heightValue"
+    ).innerText=v.toFixed(2);
+}
+
+
+function changeHeadSize(value){
+
+    const v=Number(value);
+
+    parts.head.scale.set(
+        v,
+        v,
+        v
+    );
+
+    document.getElementById(
+        "headValue"
+    ).innerText=v.toFixed(2);
+}
+
+
+function changeBoneWidth(value){
+
+    const v=Number(value);
+
+    Object.values(parts).forEach(
+        p => {
+
+            if(
+                p.name.includes("Arm") ||
+                p.name.includes("Forearm") ||
+                p.name.includes("Thigh") ||
+                p.name.includes("Shin") ||
+                p.name==="body" ||
+                p.name==="neck"
+            ){
+
+                p.scale.x=v;
+                p.scale.z=v;
+            }
+
+        }
+    );
+
+    document.getElementById(
+        "boneValue"
+    ).innerText=v.toFixed(2);
+}
+
+
+function changeColor(value){
+
+    Object.values(parts).forEach(
+        p => {
+
+            if(p.material &&
+               p.material.color){
+
+                p.material.color.set(value);
+            }
+
+        }
+    );
+
+    document.getElementById(
+        "colorPicker"
+    ).value=value;
+}
+
+
+/* =========================================================
+   LIGHT
+========================================================= */
+
+function changeLight(value){
+
+    const v=Number(value);
+
+    ambientLight.intensity=v;
+
+    lightSource.intensity=v*1.8;
+
+    document.getElementById(
+        "lightValue"
+    ).innerText=v.toFixed(2);
+}
+
+
+/* =========================================================
+   RESET POSE
+========================================================= */
+
+function resetPose(){
+
+    Object.values(parts).forEach(
+        p => {
+
+            p.rotation.set(
+                0,
+                0,
+                0
+            );
+
+        }
+    );
+
+    parts.leftUpperArm.rotation.z=.15;
+    parts.rightUpperArm.rotation.z=-.15;
+
+    updateSliders();
+
+    document.getElementById(
+        "status"
+    ).innerText="Pose Reset";
+}
+
+
+/* =========================================================
+   PRESET ANIMATIONS
+========================================================= */
+
+function playPreset(type){
+
+    currentAnimation=type;
+
+    playing=true;
+
+    document.getElementById(
+        "playButton"
+    ).innerText="⏸";
+
+    document.getElementById(
+        "preset"
+    ).value=type;
+
+    currentFrame=0;
+
+    document.getElementById(
+        "status"
+    ).innerText=
+        "Playing: "+type;
+}
+
+
+function animatePreset(){
+
+    const t =
+        currentFrame*.08;
+
+
+    if(currentAnimation==="idle"){
+
+        character.position.y=
+            Math.sin(t)*.025;
+
+        parts.head.rotation.z=
+            Math.sin(t*.7)*.03;
+    }
+
+
+    if(currentAnimation==="walk"){
+
+        const s=
+            Math.sin(t*2.2);
+
+        const c=
+            Math.cos(t*2.2);
+
+        parts.leftThigh.rotation.z=
+            s*.45;
+
+        parts.rightThigh.rotation.z=
+            -s*.45;
+
+        parts.leftShin.rotation.z=
+            -Math.max(0,s)*.35;
+
+        parts.rightShin.rotation.z=
+            -Math.max(0,-s)*.35;
+
+        parts.leftUpperArm.rotation.z=
+            -s*.4;
+
+        parts.rightUpperArm.rotation.z=
+            s*.4;
+
+        parts.leftForearm.rotation.z=
+            -s*.25;
+
+        parts.rightForearm.rotation.z=
+            s*.25;
+
+        character.position.y=
+            Math.abs(s)*.04;
+    }
+
+
+    if(currentAnimation==="run"){
+
+        const s=
+            Math.sin(t*4);
+
+        parts.leftThigh.rotation.z=
+            s*.75;
+
+        parts.rightThigh.rotation.z=
+            -s*.75;
+
+        parts.leftShin.rotation.z=
+            -Math.max(0,s)*.9;
+
+        parts.rightShin.rotation.z=
+            -Math.max(0,-s)*.9;
+
+        parts.leftUpperArm.rotation.z=
+            -s*.75;
+
+        parts.rightUpperArm.rotation.z=
+            s*.75;
+
+        parts.leftForearm.rotation.z=
+            s*.4;
+
+        parts.rightForearm.rotation.z=
+            -s*.4;
+
+        character.position.y=
+            Math.abs(s)*.09;
+    }
+
+
+    if(currentAnimation==="jump"){
+
+        const jump=
+            Math.abs(
+                Math.sin(
+                    t*.8
+                )
+            );
+
+        character.position.y=
+            jump*2;
+
+        parts.leftThigh.rotation.z=
+            -jump*.7;
+
+        parts.rightThigh.rotation.z=
+            jump*.7;
+
+        parts.leftUpperArm.rotation.z=
+            jump*1;
+
+        parts.rightUpperArm.rotation.z=
+            -jump*1;
+    }
+
+
+    if(currentAnimation==="wave"){
+
+        parts.rightUpperArm.rotation.z=
+            -.6;
+
+        parts.rightForearm.rotation.z=
+            Math.sin(t*5)*.8;
+
+        parts.rightHand.rotation.z=
+            Math.sin(t*7)*.5;
+
+        parts.leftUpperArm.rotation.z=
+            .15;
+    }
+}
+
+
+/* =========================================================
+   PLAY
+========================================================= */
 
 function togglePlay(){
 
-  playing=!playing;
+    playing=!playing;
 
-  document.getElementById("playBtn").innerText =
-    playing ? "⏸ Pause" : "▶ Play";
-
+    document.getElementById(
+        "playButton"
+    ).innerText=
+        playing?"⏸":"▶";
 }
 
 
-/* LOOP */
+function previousFrame(){
 
-let time=0;
+    currentFrame=
+        Math.max(
+            0,
+            currentFrame-1
+        );
 
-function render(){
-
-  requestAnimationFrame(render);
-
-  time+=.03;
-
-  if(playing){
-
-    if(animation==="walk"){
-
-      leftLeg.rotation.z =
-        Math.sin(time*5)*.5;
-
-      rightLeg.rotation.z =
-        Math.sin(time*5+Math.PI)*.5;
-
-      leftArm.rotation.z =
-        Math.sin(time*5+Math.PI)*.4;
-
-      rightArm.rotation.z =
-        Math.sin(time*5)*.4;
-
-    }
-
-    if(animation==="jump"){
-
-      character.position.y =
-        Math.abs(Math.sin(time*3))*1.5;
-
-    }
-
-    if(animation==="wave"){
-
-      rightArm.rotation.z =
-        Math.sin(time*5)*1.2;
-
-    }
-
-  }
-
-  renderer.render(
-    scene,
-    camera
-  );
-
+    updateTimeline();
 }
 
 
-/* RESIZE */
+function nextFrame(){
 
-window.addEventListener("resize",()=>{
+    currentFrame++;
 
-  camera.aspect =
-    canvas.clientWidth /
-    canvas.clientHeight;
-
-  camera.updateProjectionMatrix();
-
-  renderer.setSize(
-    canvas.clientWidth,
-    canvas.clientHeight
-  );
-
-});
+    updateTimeline();
+}
 
 
-camera.lookAt(0,2,0);
+/* =========================================================
+   KEYFRAMES
+========================================================= */
 
-render();
+function capturePose(){
+
+    const pose={};
+
+    Object.keys(parts).forEach(
+        name => {
+
+            const p=parts[name];
+
+            pose[name]={
+                x:p.rotation.x,
+                y:p.rotation.y,
+                z:p.rotation.z
+            };
+
+        }
+    );
+
+    return pose;
+}
+
+
+function addKeyframe(){
+
+    const pose=
+        capturePose();
+
+    keyframes.push({
+        frame:currentFrame,
+        pose:pose
+    });
+
+    drawKeyframes();
+
+    document.getElementById(
+        "status"
+    ).innerText=
+        "Keyframe added at frame "+
+        currentFrame;
+}
+
+
+function drawKeyframes(){
+
+    const track=
+        document.getElementById(
+            "track"
+        );
+
+    track.innerHTML="";
+
+    keyframes.forEach(
+        key => {
+
+            const el=
+                document.createElement(
+                    "div"
+                );
+
+            el.className=
+                "keyframe";
+
+            const percent =
+                (key.frame/120)*100;
+
+            el.style.left=
+                percent+"%";
+
+            el.title=
+                "Frame "+key.frame;
+
+            el.onclick=()=>{
+                currentFrame=
+                    key.frame;
+
+                applyPose(
+                    key.pose
+                );
+
+                updateTimeline();
+            };
+
+            track.appendChild(el);
+        }
+    );
+}
+
+
+function applyPose(pose){
+
+    Object.keys(pose).forEach(
+        name => {
+
+            if(!parts[name])
+                return;
+
+            parts[name].rotation.set(
+                pose[name].x,
+                pose[name].y,
+                pose[name].z
+            );
+
+        }
+    );
+
+    updateSliders();
+}
+
+
+/* =========================================================
+   TIMELINE
+========================================================= */
+
+function createRuler(){
+
+    const ruler=
+        document.getElementById(
+            "ruler"
+        );
+
+    for(
+        let i=0;
+        i<=120;
+        i+=10
+    ){
+
+        const tick=
+            document.createElement(
+                "div"
+            );
+
+        tick.className="tick";
+
+        tick.style.left=
+            ((i/120)*100)+"%";
+
+        tick.innerText=i;
+
+        ruler.appendChild(tick);
+    }
+}
+
+
+function updateTimeline(){
+
+    document.getElementById(
+        "frameNumber"
+    ).innerText=
+        "Frame "+currentFrame;
+
+    document.getElementById(
+        "timeNumber"
+    ).innerText=
+        (currentFrame/24).toFixed(2)+"s";
+}
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+function saveProject(){
+
+    const data={
+        version:1,
+        name:"Stick Figure Studio 3D",
+        currentFrame,
+        currentAnimation,
+        keyframes:keyframes,
+        character:{
+            position:{
+                x:character.position.x,
+                y:character.position.y,
+                z:character.position.z
+            },
+            scale:{
+                x:character.scale.x,
+                y:character.scale.y,
+                z:character.scale.z
+            }
+        }
+    };
+
+
+    const blob=
+        new Blob(
+            [
+                JSON.stringify(
+                    data,
+                    null,
+                    2
+                )
+            ],
+            {
+                type:"application/json"
+            }
+        );
+
+
+    const url=
+        URL.createObjectURL(
+            blob
+        );
+
+
+    const a=
+        document.createElement("a");
+
+    a.href=url;
+
+    a.download=
+        "stick-figure-project.json";
+
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+
+    document.getElementById(
+        "status"
+    ).innerText=
+        "Project Saved";
+}
+
+
+/* =========================================================
+   LOAD
+========================================================= */
+
+function loadProject(event){
+
+    const file=
+        event.target.files[0];
+
+    if(!file)
+        return;
+
+    const reader=
+        new FileReader();
+
+    reader.onload=function(){
+
+        try{
+
+            const data=
+                JSON.parse(
+                    reader.result
+                );
+
+
+            currentFrame=
+                data.currentFrame||0;
+
+            currentAnimation=
+                data.currentAnimation||
+                "idle";
+
+            keyframes=
+                data.keyframes||[];
+
+
+            if(data.character){
+
+                character.position.set(
+                    data.character.position.x,
+                    data.character.position.y,
+                    data.character.position.z
+                );
+
+                character.scale.set(
+                    data.character.scale.x,
+                    data.character.scale.y,
+                    data.character.scale.z
+                );
+
+            }
+
+
+            drawKeyframes();
+
+            updateTimeline();
+
+
+            document.getElementById(
+                "status"
+            ).innerText=
+                "Project Loaded";
+
+        }
+
+        catch(error){
+
+            alert(
+                "Invalid project file."
+            );
+
+        }
+
+    };
+
+    reader.readAsText(file);
+}
+
+
+/* =========================================================
+   NEW PROJECT
+========================================================= */
+
+function newProject(){
+
+    document.getElementById(
+        "modal"
+    ).classList.add("show");
+}
+
+
+function closeModal(){
+
+    document.getElementById(
+        "modal"
+    ).classList.remove("show");
+}
+
+
+function confirmNewProject(){
+
+    closeModal();
+
+    keyframes=[];
+
+    currentFrame=0;
+
+    currentAnimation="idle";
+
+    playing=false;
+
+    character.position.set(
+        0,
+        0,
+        0
+    );
+
+    character.scale.set(
+        1,
+        1,
+        1
+    );
+
+    resetPose();
+
+    resetCamera();
+
+    drawKeyframes();
+
+    updateTimeline();
+
+    document.getElementById(
+        "status"
+    ).innerText=
+        "New Project";
+}
+
+
+/* =========================================================
+   ADD CHARACTER
+========================================================= */
+
+let characterCount=1;
+
+function addCharacter(){
+
+    characterCount++;
+
+    const copy=
+        character.clone(true);
+
+    copy.position.x=
+        (characterCount-1)*2;
+
+    scene.add(copy);
+
+    document.getElementById(
+        "status"
+    ).innerText=
+        "Character "+
+        characterCount+
+        " added";
+}
+
+
+function selectCharacter(){
+
+    document.getElementById(
+        "characterItem"
+    ).classList.add(
+        "selected"
+    );
+}
+
+
+/* =========================================================
+   RESIZE
+========================================================= */
+
+window.addEventListener(
+    "resize",
+    resize
+);
+
+
+function resize(){
+
+    const canvas=
+        document.getElementById(
+            "canvas3d"
+        );
+
+    const width=
+        canvas.clientWidth;
+
+    const height=
+        canvas.clientHeight;
+
+    camera.aspect=
+        width/height;
+
+    camera.updateProjectionMatrix();
+
+    renderer.setSize(
+        width,
+        height,
+        false
+    );
+}
+
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function animate(){
+
+    requestAnimationFrame(
+        animate
+    );
+
+
+    if(playing){
+
+        currentFrame++;
+
+        if(currentFrame>120)
+            currentFrame=0;
+
+        animatePreset();
+
+        updateTimeline();
+    }
+
+
+    renderer.render(
+        scene,
+        camera
+    );
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+init();
 
 </script>
 
 </body>
-</html>
+  </html>
